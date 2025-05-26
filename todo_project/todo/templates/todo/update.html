@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Task</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --white: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .card-header h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            background-color: var(--light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            background-color: var(--white);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .time-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+            user-select: none;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--gray);
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            color: var(--dark);
+        }
+
+        .helptext {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Update Task</h1>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="update-form">
+                    {% csrf_token %}
+                    
+                    <!-- Title Field -->
+                    <div class="form-group">
+                        {{ form.title.label_tag }}
+                        {{ form.title }}
+                        {% if form.title.help_text %}
+                            <span class="helptext">{{ form.title.help_text }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Description Field -->
+                    <div class="form-group">
+                        {{ form.description.label_tag }}
+                        {{ form.description }}
+                    </div>
+                    
+                    <!-- Time Field -->
+                    <div class="form-group">
+                        <div class="time-container">
+                            {{ form.time.label_tag }}
+                            {{ form.time }}
+                        </div>
+                    </div>
+                    
+                    <!-- Completed Checkbox -->
+                    <div class="checkbox-container">
+                        {{ form.completed }}
+                        {{ form.completed.label_tag }}
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="{% url 'index' %}" class="btn btn-outline">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                            </svg>
+                            Update Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus the title field when page loads
+            const titleInput = document.querySelector('input[name="title"]');
+            if (titleInput) {
+                titleInput.focus();
+                titleInput.select();
+            }
+            
+            // Enhance time input
+            const timeInput = document.querySelector('input[type="time"]');
+            if (timeInput && !timeInput.value) {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                timeInput.value = `${hours}:${minutes}`;
+            }
+            
+            // Add confirmation when leaving page with unsaved changes
+            const form = document.querySelector('.update-form');
+            let formChanged = false;
+            
+            const formInputs = form.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    formChanged = true;
+                });
+            });
+            
+            window.addEventListener('beforeunload', (e) => {
+                if (formChanged) {
+                    e.preventDefault();
+                    e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                }
+            });
+            
+            form.addEventListener('submit', () => {
+                formChanged = false;
+            });
+
+            // Add animation to form elements
+            const formGroups = document.querySelectorAll('.form-group, .checkbox-container');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(10px)';
+                group.style.animation = `fadeIn 0.3s ease-out ${index * 0.1}s forwards`;
+            });
+        });
+    </script>
+</body>
+</html>
